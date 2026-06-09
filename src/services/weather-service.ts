@@ -58,18 +58,8 @@ export async function fetchForecastWeather(city: string): Promise<ForecastWeathe
   };
 }
 
-export async function fetchCoordinates(city: string, limit = 1): Promise<GeoLocation[]> {
-  const locations = await fetchJson<GeoLocation[]>(
-    buildGeoUrl('direct', { q: city, limit: String(limit) }),
-  );
-
-  if (!locations.length) {
-    throw new Error('City not found.');
-  }
-
-  return locations.slice(0, limit);
-}
-
 export async function fetchCitySuggestions(city: string): Promise<GeoLocation[]> {
-  return fetchCoordinates(city, 5);
+  const locations = await fetchJson<GeoLocation[]>(buildGeoUrl('direct', { q: city, limit: '5' }));
+
+  return locations.slice(0, 5);
 }

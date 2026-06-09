@@ -1,4 +1,4 @@
-import { type CSSProperties, type FocusEvent, useRef, useState } from 'react';
+import { type CSSProperties, type FocusEvent, useEffect, useRef, useState } from 'react';
 
 import { useCitySuggestions } from './hooks/use-city-suggestions';
 import { useWeather } from './hooks/use-weather';
@@ -36,18 +36,52 @@ function App() {
     loading: suggestionsLoading,
     suggestions,
   } = useCitySuggestions(city);
-  const { weather, loading, error, forecast, loadCityWeather } = useWeather();
+  const {
+    weather,
+    loading,
+    error: weatherError,
+    forecast,
+    loadCityWeather,
+    clearError: clearWeatherError,
+  } = useWeather();
   const shouldShowSuggestions = isSuggestionsOpen && city.trim().length >= MIN_SEARCH_LENGTH;
   const shouldShowEmptySuggestions =
     shouldShowSuggestions &&
     hasSearchedSuggestions &&
     !suggestionsLoading &&
     suggestions.length === 0;
+  const searchInlineError = searchError || weatherError;
+
+  console.log(hasSearchedSuggestions);
+
+  useEffect(() => {
+    if (!searchError) {
+      return;
+    }
+
+    const timeoutId = window.setTimeout(() => {
+      setSearchError('');
+      cityInputRef.current?.classList.remove('input-error-shake');
+    }, 3000);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [searchError]);
+
+  useEffect(() => {
+    if (!weatherError || !cityInputRef.current) {
+      return;
+    }
+
+    cityInputRef.current.classList.remove('input-error-shake');
+    void cityInputRef.current.offsetWidth;
+    cityInputRef.current.classList.add('input-error-shake');
+  }, [weatherError]);
 
   const handleCityChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setCity(value);
     setSearchError('');
+    clearWeatherError();
     setIsSuggestionsOpen(value.trim().length >= MIN_SEARCH_LENGTH);
   };
 
@@ -124,18 +158,26 @@ function App() {
                 onChange={handleCityChange}
                 onFocus={() => setIsSuggestionsOpen(city.trim().length >= MIN_SEARCH_LENGTH)}
                 placeholder="Наприклад, Харків"
-                aria-invalid={Boolean(searchError)}
-                aria-describedby={searchError ? 'search-error' : undefined}
-                className={`h-12 w-full rounded-md border bg-white px-4 text-base text-slate-950 outline-none transition-[border-color,box-shadow] duration-200 ${
-                  searchError
-                    ? 'border-rose-400 focus:border-rose-500 focus:ring-4 focus:ring-rose-100'
+                aria-invalid={Boolean(searchInlineError)}
+                aria-describedby="search-error"
+                className={`h-12 w-full rounded-md border bg-white px-4 pr-12 text-base text-slate-950 outline-none transition-[border-color,box-shadow] duration-200 ${
+                  searchInlineError
+                    ? 'border-red-600 focus:border-red-600 focus:ring-0'
                     : 'border-slate-200 focus:border-sky-500 focus:ring-4 focus:ring-sky-100'
                 }`}
                 autoComplete="off"
               />
+              {searchInlineError && (
+                <span
+                  aria-hidden="true"
+                  className="pointer-events-none absolute right-4 top-6 grid h-5 w-5 -translate-y-1/2 place-items-center rounded-full border-2 border-red-600 text-xs font-bold leading-none text-red-600"
+                >
+                  !
+                </span>
+              )}
 
               {shouldShowSuggestions && (
-                <ul className="dropdown-reveal absolute left-0 right-0 top-[calc(100%+0.5rem)] z-20 overflow-hidden rounded-lg border border-slate-200 bg-white shadow-2xl shadow-slate-950/15">
+                <ul className="dropdown-reveal absolute left-0 right-0 top-[calc(100%-1rem)] z-20 overflow-hidden rounded-lg border border-slate-200 bg-white shadow-2xl shadow-slate-950/15">
                   {suggestionsLoading &&
                     Array.from({ length: 4 }).map((_, index) => (
                       <li
@@ -181,32 +223,26 @@ function App() {
                   )}
                 </ul>
               )}
+
+              <p
+                id="search-error"
+                className={`mt-2 min-h-5 text-sm text-red-600 transition-opacity duration-150 ${
+                  searchInlineError ? 'error-reveal opacity-100' : 'opacity-0'
+                }`}
+                aria-live="polite"
+              >
+                {searchInlineError || ' '}
+              </p>
             </div>
 
             <button
               type="submit"
-              disabled={loading}
-              className="inline-flex h-12 items-center justify-center rounded-md bg-slate-950 px-6 text-sm font-semibold text-white shadow-lg shadow-slate-950/20 cursor-pointer transition-all duration-200 hover:bg-slate-700 disabled:translate-y-0 disabled:cursor-not-allowed disabled:bg-slate-400"
+              disabled={loading || (hasSearchedSuggestions && suggestions.length === 0)}
+              className="inline-flex h-12 items-center justify-center rounded-md bg-slate-950 px-6 text-sm text-white shadow-lg shadow-slate-950/20 cursor-pointer transition-all duration-200 hover:bg-slate-700 disabled:translate-y-0 disabled:cursor-not-allowed disabled:bg-slate-400"
             >
               {loading ? 'Шукаю...' : 'Пошук'}
             </button>
           </form>
-
-          <div className="min-h-8">
-            {searchError && (
-              <p
-                id="search-error"
-                className="error-reveal inline-flex rounded-md border border-rose-200 bg-rose-50 px-4 py-2 text-sm font-medium text-rose-700"
-              >
-                {searchError}
-              </p>
-            )}
-            {error && (
-              <p className="error-reveal inline-flex rounded-md border border-rose-200 bg-rose-50 px-4 py-2 text-sm font-medium text-rose-700">
-                {error}
-              </p>
-            )}
-          </div>
         </div>
 
         <aside className="weather-card rounded-lg border border-white/70 bg-white/75 p-5 shadow-2xl shadow-sky-950/10 backdrop-blur">

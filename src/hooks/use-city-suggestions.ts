@@ -3,10 +3,16 @@ import { useEffect, useReducer, useRef } from 'react';
 import { fetchCitySuggestions } from '../services/weather-service';
 import type { GeoLocation } from '../types/weather';
 
+const MIN_SUGGESTION_QUERY_LENGTH = 2;
+const SUGGESTIONS_DEBOUNCE_MS = 300;
+
+type SuggestionsStatus = 'idle' | 'loading' | 'success' | 'error';
+
 type SuggestionsState = {
+  emptyResultPrefix: string;
   error: string;
   query: string;
-  status: 'idle' | 'loading' | 'success' | 'error';
+  status: SuggestionsStatus;
   suggestions: GeoLocation[];
 };
 
@@ -15,31 +21,53 @@ type SuggestionsAction =
   | { type: 'success'; query: string; suggestions: GeoLocation[] }
   | { type: 'error'; error: string; query: string };
 
-const initialSuggestionsState: SuggestionsState = {
+const createIdleResult = (query = ''): SuggestionsState => ({
+  emptyResultPrefix: '',
   error: '',
-  query: '',
+  query,
   status: 'idle',
   suggestions: [],
+});
+
+const createLoadingResult = (query: string): SuggestionsState => ({
+  emptyResultPrefix: '',
+  error: '',
+  query,
+  status: 'loading',
+  suggestions: [],
+});
+
+const createSuccessResult = (query: string, suggestions: GeoLocation[]): SuggestionsState => ({
+  emptyResultPrefix: suggestions.length === 0 ? query : '',
+  error: '',
+  query,
+  status: 'success',
+  suggestions,
+});
+
+const initialSuggestionsState: SuggestionsState = {
+  ...createIdleResult(),
 };
 
 function suggestionsReducer(state: SuggestionsState, action: SuggestionsAction): SuggestionsState {
   switch (action.type) {
     case 'loading':
       return {
+        ...state,
         error: '',
         query: action.query,
         status: 'loading',
         suggestions: [],
       };
-    case 'success':
-      return {
-        error: '',
-        query: action.query,
-        status: 'success',
-        suggestions: action.suggestions,
-      };
+    case 'success': {
+      const successResult = createSuccessResult(action.query, action.suggestions);
+
+      return successResult;
+    }
     case 'error':
       return {
+        ...state,
+        emptyResultPrefix: '',
         error: action.error,
         query: action.query,
         status: 'error',
@@ -50,35 +78,56 @@ function suggestionsReducer(state: SuggestionsState, action: SuggestionsAction):
   }
 }
 
+function isSearchableQuery(query: string) {
+  return query.length >= MIN_SUGGESTION_QUERY_LENGTH;
+}
+
+function shouldSkipBecauseEmptyPrefix(query: string, emptyResultPrefix: string) {
+  return (
+    isSearchableQuery(emptyResultPrefix) &&
+    query.length > emptyResultPrefix.length &&
+    query.startsWith(emptyResultPrefix)
+  );
+}
+
+function getVisibleState(query: string, state: SuggestionsState): SuggestionsState {
+  if (!isSearchableQuery(query)) {
+    return createIdleResult();
+  }
+
+  if (shouldSkipBecauseEmptyPrefix(query, state.emptyResultPrefix)) {
+    return createSuccessResult(query, []);
+  }
+
+  if (state.query === query) {
+    return state;
+  }
+
+  return createLoadingResult(query);
+}
+
 export function useCitySuggestions(query: string) {
   const [state, dispatch] = useReducer(suggestionsReducer, initialSuggestionsState);
   const timeoutRef = useRef<number | null>(null);
   const trimmedQuery = query.trim();
-  const currentState =
-    state.query === trimmedQuery
-      ? state
-      : {
-          error: '',
-          query: trimmedQuery,
-          status: trimmedQuery.length >= 2 ? ('loading' as const) : ('idle' as const),
-          suggestions: [],
-        };
+  const shouldSkipRequest = shouldSkipBecauseEmptyPrefix(trimmedQuery, state.emptyResultPrefix);
+  const currentState = getVisibleState(trimmedQuery, state);
 
-  useEffect(() => {
-    return () => {
-      if (timeoutRef.current) {
-        window.clearTimeout(timeoutRef.current);
-      }
-    };
-  }, []);
-
-  useEffect(() => {
+  const clearPendingRequest = () => {
     if (timeoutRef.current) {
       window.clearTimeout(timeoutRef.current);
       timeoutRef.current = null;
     }
+  };
 
-    if (trimmedQuery.length < 2) {
+  useEffect(() => {
+    clearPendingRequest();
+
+    if (!isSearchableQuery(trimmedQuery)) {
+      return;
+    }
+
+    if (shouldSkipRequest) {
       return;
     }
 
@@ -95,14 +144,10 @@ export function useCitySuggestions(query: string) {
           query: trimmedQuery,
         });
       }
-    }, 300);
+    }, SUGGESTIONS_DEBOUNCE_MS);
 
-    return () => {
-      if (timeoutRef.current) {
-        window.clearTimeout(timeoutRef.current);
-      }
-    };
-  }, [trimmedQuery]);
+    return clearPendingRequest;
+  }, [shouldSkipRequest, trimmedQuery]);
 
   return {
     error: currentState.error,

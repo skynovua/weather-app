@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import { fetchCurrentWeather, fetchForecastWeather } from '../services/weather-service';
 import type { CityWeatherInfo, ForecastItem } from '../types/weather';
@@ -8,6 +8,18 @@ export function useWeather() {
   const [forecast, setForecast] = useState<ForecastItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    if (!error) {
+      return;
+    }
+
+    const timeoutId = window.setTimeout(() => setError(''), 3000);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [error]);
+
+  const clearError = useCallback(() => setError(''), []);
 
   const loadCityWeather = useCallback(async (city: string) => {
     const formattedCity = city.trim();
@@ -40,6 +52,7 @@ export function useWeather() {
   }, []);
 
   return {
+    clearError,
     error,
     forecast,
     loadCityWeather,
