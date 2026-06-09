@@ -52,8 +52,6 @@ function App() {
     suggestions.length === 0;
   const searchInlineError = searchError || weatherError;
 
-  console.log(hasSearchedSuggestions);
-
   useEffect(() => {
     if (!searchError) {
       return;
