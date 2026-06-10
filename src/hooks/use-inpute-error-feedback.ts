@@ -25,7 +25,7 @@ export function useInputErrorFeedback({
 
     const timeoutId = window.setTimeout(() => {
       setSearchError('');
-      inputRef.current?.classList.remove('input-error-shake');
+      (inputRef.current?.parentElement ?? inputRef.current)?.classList.remove('input-error-shake');
     }, ERROR_MESSAGE_TIMEOUT_MS);
 
     return () => window.clearTimeout(timeoutId);

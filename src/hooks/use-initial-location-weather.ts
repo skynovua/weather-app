@@ -1,11 +1,13 @@
 import { useEffect, useRef } from 'react';
 
+import { DEFAULT_CITY } from '../constants/weather';
 import type { WeatherCoordinates } from '../types/weather';
 
 let hasCheckedInitialLocation = false;
 let initialLocationRequest: Promise<WeatherCoordinates> | null = null;
 
 type UseInitialLocationWeatherOptions = {
+  loadCityWeather: (city: string) => void;
   loadCoordinatesWeather: (coordinates: WeatherCoordinates) => void;
 };
 
@@ -40,6 +42,7 @@ function getInitialLocationRequest() {
 }
 
 export function useInitialLocationWeather({
+  loadCityWeather,
   loadCoordinatesWeather,
 }: UseInitialLocationWeatherOptions) {
   const hasManualWeatherRequestRef = useRef(false);
@@ -52,11 +55,17 @@ export function useInitialLocationWeather({
     hasCheckedInitialLocation = true;
     const locationRequest = getInitialLocationRequest();
 
+    let ignoreResult = false;
+    const loadDefaultCityWeather = () => {
+      if (!ignoreResult && !hasManualWeatherRequestRef.current) {
+        loadCityWeather(DEFAULT_CITY);
+      }
+    };
+
     if (!locationRequest) {
+      loadDefaultCityWeather();
       return;
     }
-
-    let ignoreResult = false;
 
     locationRequest
       .then((coordinates) => {
@@ -64,12 +73,12 @@ export function useInitialLocationWeather({
           loadCoordinatesWeather(coordinates);
         }
       })
-      .catch(() => undefined);
+      .catch(loadDefaultCityWeather);
 
     return () => {
       ignoreResult = true;
     };
-  }, [loadCoordinatesWeather]);
+  }, [loadCityWeather, loadCoordinatesWeather]);
 
   return {
     markManualWeatherRequest: () => {

@@ -32,10 +32,12 @@ export function shakeInput(input: HTMLInputElement | null, options: { focus?: bo
     return;
   }
 
-  input.classList.remove('input-error-shake');
+  const feedbackTarget = input.parentElement ?? input;
+
+  feedbackTarget.classList.remove('input-error-shake');
   // Примусмово тригерим reflow для коректного повторного застосування анімації
-  void input.offsetWidth;
-  input.classList.add('input-error-shake');
+  void feedbackTarget.offsetWidth;
+  feedbackTarget.classList.add('input-error-shake');
 
   if (options.focus) {
     input.focus();

@@ -56,7 +56,7 @@ function removeWeatherFromCache(city: string) {
 export function useWeather() {
   const [weather, setWeather] = useState<CityWeatherInfo | null>(null);
   const [forecast, setForecast] = useState<ForecastItem[]>([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [errorVersion, setErrorVersion] = useState(0);
 
@@ -100,8 +100,6 @@ export function useWeather() {
         setWeather(currentWeather);
         setForecast(forecastWeather.slice(0, FORECAST_DAYS_LIMIT));
       } catch {
-        setWeather(null);
-        setForecast([]);
         showError('Не вдалося завантажити погоду для цього міста. Спробуйте ще раз.');
       } finally {
         setLoading(false);
