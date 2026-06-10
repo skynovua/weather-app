@@ -6,8 +6,13 @@ import {
   WEATHER_CACHE_TTL_MS,
 } from '../constants/weather';
 import { getWeatherCacheKey, readWeatherCache, writeWeatherCache } from '../services/storage';
-import { fetchCurrentWeather, fetchForecastWeather } from '../services/weather-service';
-import type { CityWeatherInfo, ForecastItem } from '../types/weather';
+import {
+  fetchCurrentWeather,
+  fetchCurrentWeatherByCoordinates,
+  fetchForecastWeather,
+  fetchForecastWeatherByCoordinates,
+} from '../services/weather-service';
+import type { CityWeatherInfo, ForecastItem, WeatherCoordinates } from '../types/weather';
 
 interface LoadCityWeatherOptions {
   useCache?: boolean;
@@ -84,40 +89,16 @@ export function useWeather() {
     removeWeatherFromCache(city);
   }, []);
 
-  const loadCityWeather = useCallback(
-    async (city: string, options: LoadCityWeatherOptions = {}) => {
-      const formattedCity = city.trim();
-
-      if (!formattedCity) {
-        showError('Введіть назву міста для пошуку погоди.');
-        return;
-      }
-
+  const loadWeatherData = useCallback(
+    async (loadWeather: () => Promise<[CityWeatherInfo, ForecastItem[]]>) => {
       setError('');
-
-      const cachedWeather = options.useCache ? getFreshCachedWeather(formattedCity) : null;
-
-      if (cachedWeather) {
-        setWeather(cachedWeather.weather);
-        setForecast(cachedWeather.forecast);
-        return;
-      }
-
       setLoading(true);
 
       try {
-        const [currentWeather, forecastWeather] = await Promise.all([
-          fetchCurrentWeather(formattedCity),
-          fetchForecastWeather(formattedCity),
-        ]);
+        const [currentWeather, forecastWeather] = await loadWeather();
 
         setWeather(currentWeather);
-        const forecastList = forecastWeather.list.slice(0, FORECAST_DAYS_LIMIT);
-        setForecast(forecastList);
-
-        if (options.useCache) {
-          saveWeatherToCache(formattedCity, currentWeather, forecastList);
-        }
+        setForecast(forecastWeather.slice(0, FORECAST_DAYS_LIMIT));
       } catch (err) {
         setWeather(null);
         setForecast([]);
@@ -131,6 +112,54 @@ export function useWeather() {
     [showError],
   );
 
+  const loadCityWeather = useCallback(
+    async (city: string, options: LoadCityWeatherOptions = {}) => {
+      const formattedCity = city.trim();
+
+      if (!formattedCity) {
+        showError('Введіть назву міста для пошуку погоди.');
+        return;
+      }
+
+      const cachedWeather = options.useCache ? getFreshCachedWeather(formattedCity) : null;
+
+      if (cachedWeather) {
+        setWeather(cachedWeather.weather);
+        setForecast(cachedWeather.forecast);
+        return;
+      }
+
+      await loadWeatherData(async () => {
+        const [currentWeather, forecastWeather] = await Promise.all([
+          fetchCurrentWeather(formattedCity),
+          fetchForecastWeather(formattedCity),
+        ]);
+        const forecastList = forecastWeather.list.slice(0, FORECAST_DAYS_LIMIT);
+
+        if (options.useCache) {
+          saveWeatherToCache(formattedCity, currentWeather, forecastList);
+        }
+
+        return [currentWeather, forecastList];
+      });
+    },
+    [loadWeatherData, showError],
+  );
+
+  const loadCoordinatesWeather = useCallback(
+    async (coordinates: WeatherCoordinates) => {
+      await loadWeatherData(async () => {
+        const [currentWeather, forecastWeather] = await Promise.all([
+          fetchCurrentWeatherByCoordinates(coordinates),
+          fetchForecastWeatherByCoordinates(coordinates),
+        ]);
+
+        return [currentWeather, forecastWeather.list];
+      });
+    },
+    [loadWeatherData],
+  );
+
   return {
     cacheCurrentWeather,
     clearError,
@@ -138,8 +167,10 @@ export function useWeather() {
     errorVersion,
     forecast,
     loadCityWeather,
+    loadCoordinatesWeather,
     loading,
     removeCachedWeather,
+    showError,
     weather,
   };
 }

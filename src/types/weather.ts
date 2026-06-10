@@ -52,6 +52,11 @@ export interface GeoLocation {
   state?: string;
 }
 
+export interface WeatherCoordinates {
+  lat: number;
+  lon: number;
+}
+
 export interface CityWeatherInfo {
   city: string;
   country: string;

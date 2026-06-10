@@ -46,6 +46,10 @@
 }
 
 @layer components {
+  .content-rise {
+    animation: content-rise var(--motion-content-rise-duration) var(--motion-ease-out) both;
+  }
+
   .dropdown-reveal {
     animation: dropdown-reveal var(--motion-dropdown-duration) var(--motion-ease-out) both;
     transform-origin: top center;
@@ -228,6 +232,7 @@
 @media (prefers-reduced-motion: reduce) {
   .dropdown-reveal,
   .dropdown-item,
+  .content-rise,
   .skeleton-line,
   .error-reveal,
   .input-error-shake,
