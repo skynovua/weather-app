@@ -1,0 +1,21 @@
+import type { SVGProps } from 'react';
+
+export const WeatherLogoIcon: React.FC<SVGProps<SVGSVGElement>> = (props) => {
+  return (
+    <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false" {...props}>
+      <circle cx="18" cy="17" r="6" className="fill-amber-400" />
+      <path
+        className="fill-amber-400"
+        d="M29 18h-3a1 1 0 1 1 0-2h3a1 1 0 1 1 0 2ZM18 10a1 1 0 0 1-1-1V6a1 1 0 1 1 2 0v3a1 1 0 0 1-1 1ZM24.2 12.2a1 1 0 0 1-1.4-1.4l2.3-2.3a1 1 0 1 1 1.4 1.4l-2.3 2.3ZM11.8 12.2 9.5 9.9a1 1 0 1 1 1.4-1.4l2.3 2.3a1 1 0 0 1-1.4 1.4ZM25.1 25.5l-1.8-1.8a1 1 0 0 1 1.4-1.4l1.8 1.8a1 1 0 0 1-1.4 1.4Z"
+      />
+      <path
+        className="fill-sky-500"
+        d="M19.8 19.6a3.5 3.5 0 0 0-1.7-.4 4.4 4.4 0 0 0-.7-2.4A6.8 6.8 0 0 0 12 14a5.8 5.8 0 0 0-4.8 2.4 4.5 4.5 0 0 0-.7 2.8 4.4 4.4 0 0 0-4.3 3C1.4 24.6 3.6 27 6 27h12.1a3.8 3.8 0 0 0 3.9-3.7 4 4 0 0 0-2.2-3.7Z"
+      />
+      <path
+        className="fill-sky-500"
+        d="M7.2 24.7h10.9a1.5 1.5 0 0 0 1.6-1.4 1.8 1.8 0 0 0-1-1.6 2.4 2.4 0 0 0-1.2-.3h-1.3l-.2-1.3a2.3 2.3 0 0 0-.4-1.2A4.8 4.8 0 0 0 12 17a3.9 3.9 0 0 0-3.1 1.5 2.3 2.3 0 0 0-.4 1.5l.1 1.4-1.4.1a2.2 2.2 0 0 0-2.1 1.5c-.2.8.6 1.7 2.1 1.7Z"
+      />
+    </svg>
+  );
+};

@@ -52,8 +52,8 @@ export const SearchForm: FC<SearchFormProps> = (props) => {
       : 'border-slate-200 focus:border-sky-500 focus:ring-4 focus:ring-sky-100',
   );
   const errorClassName = cn(
-    'mt-2 min-h-5 text-sm text-red-600 transition-opacity duration-150',
-    searchInlineError ? 'error-reveal opacity-100' : 'opacity-0',
+    'absolute top-full left-0 mt-1 text-sm text-red-600 transition-opacity duration-150',
+    searchInlineError ? 'error-reveal opacity-100' : 'pointer-events-none opacity-0',
   );
 
   useInputErrorFeedback({
@@ -109,7 +109,7 @@ export const SearchForm: FC<SearchFormProps> = (props) => {
 
   return (
     <form
-      className="relative z-30 flex w-full max-w-2xl flex-col gap-3 md:flex-row"
+      className="relative z-30 flex w-full flex-col gap-3 md:flex-row"
       onSubmit={handleSearchSubmit}
     >
       <div className="relative min-w-0 flex-1" onBlur={handleSuggestionsBlur}>
