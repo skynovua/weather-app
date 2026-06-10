@@ -39,7 +39,7 @@ export const WeatherCard: React.FC<WeatherCardProps> = (props) => {
         >
           <div className="flex items-start justify-between gap-4">
             <div>
-              <p className="text-sm font-medium uppercase text-slate-500">Зараз</p>
+              <p className="text-sm font-medium text-slate-500 uppercase">Зараз</p>
               <h2 className="mt-2 text-3xl font-bold">
                 {weather.city}, {weather.country}
               </h2>
@@ -71,13 +71,13 @@ export const WeatherCard: React.FC<WeatherCardProps> = (props) => {
 
           <div>
             <p className="text-7xl font-bold">{weather.temperature}°</p>
-            <p className="mt-2 capitalize text-slate-600">{weather.description}</p>
+            <p className="mt-2 text-slate-600 capitalize">{weather.description}</p>
           </div>
 
           <div className="grid gap-3 sm:grid-cols-3 lg:grid-cols-1">
             {weatherStats.map((stat) => (
               <div key={stat.key} className="rounded-md border border-slate-200 bg-white/80 p-4">
-                <p className="text-xs font-medium uppercase text-slate-500">{stat.label}</p>
+                <p className="text-xs font-medium text-slate-500 uppercase">{stat.label}</p>
                 <p className="mt-2 text-2xl font-semibold">
                   {weather[stat.key]}
                   {stat.unit}
@@ -88,7 +88,7 @@ export const WeatherCard: React.FC<WeatherCardProps> = (props) => {
 
           {forecast.length > 0 && (
             <section className="space-y-3 border-t border-slate-200 pt-5">
-              <h3 className="text-sm font-semibold uppercase text-slate-500">Прогноз на 5 днів</h3>
+              <h3 className="text-sm font-semibold text-slate-500 uppercase">Прогноз на 5 днів</h3>
               <div className="grid gap-2">
                 {forecast.map((day, index) => (
                   <article
@@ -106,7 +106,7 @@ export const WeatherCard: React.FC<WeatherCardProps> = (props) => {
                         <p className="font-semibold capitalize">
                           {forecastDateFormatter.format(new Date(day.dt * 1000))}
                         </p>
-                        <p className="truncate text-sm capitalize text-slate-600">
+                        <p className="truncate text-sm text-slate-600 capitalize">
                           {day.description}
                         </p>
                       </div>

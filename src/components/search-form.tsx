@@ -108,7 +108,7 @@ export const SearchForm: FC<SearchFormProps> = (props) => {
 
   return (
     <form
-      className="relative flex w-full max-w-2xl flex-col gap-3 md:flex-row"
+      className="relative z-30 flex w-full max-w-2xl flex-col gap-3 md:flex-row"
       onSubmit={handleSearchSubmit}
     >
       <div className="relative min-w-0 flex-1" onBlur={handleSuggestionsBlur}>
@@ -130,7 +130,7 @@ export const SearchForm: FC<SearchFormProps> = (props) => {
         {searchInlineError && (
           <span
             aria-hidden="true"
-            className="pointer-events-none absolute right-4 top-6 grid h-5 w-5 -translate-y-1/2 place-items-center rounded-full border-2 border-red-600 text-xs font-bold leading-none text-red-600"
+            className="pointer-events-none absolute top-6 right-4 grid h-5 w-5 -translate-y-1/2 place-items-center rounded-full border-2 border-red-600 text-xs leading-none font-bold text-red-600"
           >
             !
           </span>

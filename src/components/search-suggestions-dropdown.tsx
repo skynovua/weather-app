@@ -17,7 +17,7 @@ export const SearchSuggestionsDropdown: FC<SearchSuggestionsDropdownProps> = (pr
   const { error, loading, shouldShowEmpty, suggestions, onSelectCity } = props;
 
   return (
-    <ul className="dropdown-reveal absolute left-0 right-0 top-[calc(100%-1rem)] z-20 overflow-hidden rounded-lg border border-slate-200 bg-white shadow-2xl shadow-slate-950/15">
+    <ul className="dropdown-reveal absolute top-[calc(100%-1rem)] right-0 left-0 z-50 overflow-hidden rounded-lg border border-slate-200 bg-white shadow-2xl shadow-slate-950/15">
       {loading &&
         Array.from({ length: SUGGESTION_SKELETON_COUNT }).map((_, index) => (
           <li
