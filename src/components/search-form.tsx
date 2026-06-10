@@ -74,6 +74,7 @@ export const SearchForm: FC<SearchFormProps> = (props) => {
   };
 
   const handleCitySelect = (selectedCity: string) => {
+    cityInputRef.current?.blur();
     setCity('');
     setIsSuggestionsOpen(false);
     onSearchCity(selectedCity);
