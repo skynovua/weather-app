@@ -99,12 +99,10 @@ export function useWeather() {
 
         setWeather(currentWeather);
         setForecast(forecastWeather.slice(0, FORECAST_DAYS_LIMIT));
-      } catch (err) {
+      } catch {
         setWeather(null);
         setForecast([]);
-        showError(
-          err instanceof Error ? err.message : 'Ой, сталася помилка при завантаженні даних погоди.',
-        );
+        showError('Не вдалося завантажити погоду для цього міста. Спробуйте ще раз.');
       } finally {
         setLoading(false);
       }
