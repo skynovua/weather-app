@@ -5,14 +5,11 @@ import type {
   ForecastWeatherInfo,
   GeoLocation,
   WeatherApiResponse,
+  WeatherCoordinates,
 } from '../types/weather';
 import { buildGeoUrl, buildWeatherUrl, fetchJson } from './api';
 
-export async function fetchCurrentWeather(city: string): Promise<CityWeatherInfo> {
-  const data = await fetchJson<WeatherApiResponse>(
-    buildWeatherUrl('weather', { q: city, units: 'metric' }),
-  );
-
+function mapCurrentWeather(data: WeatherApiResponse): CityWeatherInfo {
   return {
     city: data.name,
     country: data.sys.country,
@@ -25,11 +22,7 @@ export async function fetchCurrentWeather(city: string): Promise<CityWeatherInfo
   };
 }
 
-export async function fetchForecastWeather(city: string): Promise<ForecastWeatherInfo> {
-  const data = await fetchJson<ForecastApiResponse>(
-    buildWeatherUrl('forecast', { q: city, units: 'metric', cnt: String(FORECAST_API_ITEM_LIMIT) }),
-  );
-
+function mapForecastWeather(data: ForecastApiResponse): ForecastWeatherInfo {
   const groupedByDay = new Map<string, ForecastApiResponse['list'][number]>();
 
   data.list.forEach((item) => {
@@ -57,6 +50,53 @@ export async function fetchForecastWeather(city: string): Promise<ForecastWeathe
     },
     list,
   };
+}
+
+function coordinatesToParams(coordinates: WeatherCoordinates) {
+  return {
+    lat: String(coordinates.lat),
+    lon: String(coordinates.lon),
+  };
+}
+
+export async function fetchCurrentWeather(city: string): Promise<CityWeatherInfo> {
+  const data = await fetchJson<WeatherApiResponse>(
+    buildWeatherUrl('weather', { q: city, units: 'metric' }),
+  );
+
+  return mapCurrentWeather(data);
+}
+
+export async function fetchCurrentWeatherByCoordinates(
+  coordinates: WeatherCoordinates,
+): Promise<CityWeatherInfo> {
+  const data = await fetchJson<WeatherApiResponse>(
+    buildWeatherUrl('weather', { ...coordinatesToParams(coordinates), units: 'metric' }),
+  );
+
+  return mapCurrentWeather(data);
+}
+
+export async function fetchForecastWeather(city: string): Promise<ForecastWeatherInfo> {
+  const data = await fetchJson<ForecastApiResponse>(
+    buildWeatherUrl('forecast', { q: city, units: 'metric', cnt: String(FORECAST_API_ITEM_LIMIT) }),
+  );
+
+  return mapForecastWeather(data);
+}
+
+export async function fetchForecastWeatherByCoordinates(
+  coordinates: WeatherCoordinates,
+): Promise<ForecastWeatherInfo> {
+  const data = await fetchJson<ForecastApiResponse>(
+    buildWeatherUrl('forecast', {
+      ...coordinatesToParams(coordinates),
+      units: 'metric',
+      cnt: String(FORECAST_API_ITEM_LIMIT),
+    }),
+  );
+
+  return mapForecastWeather(data);
 }
 
 export async function fetchCitySuggestions(city: string): Promise<GeoLocation[]> {

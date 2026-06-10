@@ -33,10 +33,7 @@ export const WeatherCard: React.FC<WeatherCardProps> = (props) => {
   return (
     <aside className="weather-card rounded-lg border border-white/70 bg-white/75 p-5 shadow-2xl shadow-sky-950/10 backdrop-blur">
       {weather ? (
-        <div
-          key={weatherContentKey}
-          className="space-y-6 motion-safe:animate-[content-rise_var(--motion-content-rise-duration)_var(--motion-ease-out)_both]"
-        >
+        <div key={weatherContentKey} className="content-rise space-y-6">
           <div className="flex items-start justify-between gap-4">
             <div>
               <p className="text-sm font-medium text-slate-500 uppercase">Зараз</p>
@@ -122,7 +119,7 @@ export const WeatherCard: React.FC<WeatherCardProps> = (props) => {
           )}
         </div>
       ) : (
-        <div className="grid min-h-96 place-items-center rounded-md border border-dashed border-slate-300 bg-white/50 p-8 text-center motion-safe:animate-[content-rise_var(--motion-content-rise-duration)_var(--motion-ease-out)_both]">
+        <div className="content-rise grid min-h-96 place-items-center rounded-md border border-dashed border-slate-300 bg-white/50 p-8 text-center">
           <div className="space-y-3">
             <p className="text-5xl font-bold text-sky-600">24°</p>
             <h2 className="text-xl font-semibold">Почни з пошуку міста</h2>
