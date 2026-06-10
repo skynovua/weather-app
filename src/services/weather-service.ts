@@ -1,3 +1,4 @@
+import { CITY_SUGGESTIONS_LIMIT, FORECAST_API_ITEM_LIMIT } from '../constants/weather';
 import type {
   CityWeatherInfo,
   ForecastApiResponse,
@@ -26,7 +27,7 @@ export async function fetchCurrentWeather(city: string): Promise<CityWeatherInfo
 
 export async function fetchForecastWeather(city: string): Promise<ForecastWeatherInfo> {
   const data = await fetchJson<ForecastApiResponse>(
-    buildWeatherUrl('forecast', { q: city, units: 'metric', cnt: '40' }),
+    buildWeatherUrl('forecast', { q: city, units: 'metric', cnt: String(FORECAST_API_ITEM_LIMIT) }),
   );
 
   const groupedByDay = new Map<string, ForecastApiResponse['list'][number]>();
@@ -59,7 +60,9 @@ export async function fetchForecastWeather(city: string): Promise<ForecastWeathe
 }
 
 export async function fetchCitySuggestions(city: string): Promise<GeoLocation[]> {
-  const locations = await fetchJson<GeoLocation[]>(buildGeoUrl('direct', { q: city, limit: '5' }));
+  const locations = await fetchJson<GeoLocation[]>(
+    buildGeoUrl('direct', { q: city, limit: String(CITY_SUGGESTIONS_LIMIT) }),
+  );
 
-  return locations.slice(0, 5);
+  return locations.slice(0, CITY_SUGGESTIONS_LIMIT);
 }

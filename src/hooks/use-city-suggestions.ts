@@ -1,20 +1,18 @@
 import { useEffect, useReducer, useRef } from 'react';
 
+import { CITY_SUGGESTIONS_DEBOUNCE_MS, MIN_CITY_SEARCH_LENGTH } from '../constants/weather';
 import { fetchCitySuggestions } from '../services/weather-service';
 import type { GeoLocation } from '../types/weather';
 
-const MIN_SUGGESTION_QUERY_LENGTH = 2;
-const SUGGESTIONS_DEBOUNCE_MS = 300;
-
 type SuggestionsStatus = 'idle' | 'loading' | 'success' | 'error';
 
-type SuggestionsState = {
+interface SuggestionsState {
   emptyResultPrefix: string;
   error: string;
   query: string;
   status: SuggestionsStatus;
   suggestions: GeoLocation[];
-};
+}
 
 type SuggestionsAction =
   | { type: 'loading'; query: string }
@@ -79,7 +77,7 @@ function suggestionsReducer(state: SuggestionsState, action: SuggestionsAction):
 }
 
 function isSearchableQuery(query: string) {
-  return query.length >= MIN_SUGGESTION_QUERY_LENGTH;
+  return query.length >= MIN_CITY_SEARCH_LENGTH;
 }
 
 function shouldSkipBecauseEmptyPrefix(query: string, emptyResultPrefix: string) {
@@ -144,7 +142,7 @@ export function useCitySuggestions(query: string) {
           query: trimmedQuery,
         });
       }
-    }, SUGGESTIONS_DEBOUNCE_MS);
+    }, CITY_SUGGESTIONS_DEBOUNCE_MS);
 
     return clearPendingRequest;
   }, [shouldSkipRequest, trimmedQuery]);
