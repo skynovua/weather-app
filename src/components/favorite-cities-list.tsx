@@ -20,7 +20,7 @@ export const FavoriteCitiesList: FC<FavoriteCitiesListProps> = (props) => {
   }
 
   return (
-    <section className="space-y-3">
+    <section className="content-rise space-y-3">
       <h2 className="text-sm text-slate-500 uppercase">Обрані міста</h2>
       <div className="flex gap-2 overflow-x-auto pb-1 sm:flex-wrap sm:overflow-visible sm:pb-0">
         {favoriteCities.map((favoriteCity) => {

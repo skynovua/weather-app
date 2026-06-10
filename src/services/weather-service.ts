@@ -12,6 +12,7 @@ import { buildGeoUrl, buildWeatherUrl, fetchJson } from './api';
 function mapCurrentWeather(data: WeatherApiResponse): CityWeatherInfo {
   return {
     city: data.name,
+    condition: data.weather[0]?.main ?? 'Clear',
     country: data.sys.country,
     temperature: Math.round(data.main.temp),
     feelsLike: Math.round(data.main.feels_like),

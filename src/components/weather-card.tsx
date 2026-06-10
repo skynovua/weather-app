@@ -31,11 +31,11 @@ export const WeatherCard: React.FC<WeatherCardProps> = (props) => {
   const weatherContentKey = weather ? `${weather.city}-${weather.country}` : 'empty-weather-card';
 
   return (
-    <aside className="weather-card rounded-lg border border-white/70 bg-white/75 p-4 shadow-2xl shadow-sky-950/10 backdrop-blur sm:p-5">
+    <aside className="content-rise weather-card rounded-lg border border-white/70 bg-white/75 p-4 shadow-2xl shadow-sky-950/10 backdrop-blur sm:p-5">
       {weather ? (
         <div
           key={weatherContentKey}
-          className="content-rise grid min-h-90 gap-5 lg:grid-cols-[420px_minmax(0,1fr)]"
+          className="grid min-h-90 gap-5 lg:grid-cols-[420px_minmax(0,1fr)]"
         >
           <section className="space-y-5">
             <div className="grid grid-cols-[minmax(0,1fr)_5rem] items-start gap-4">

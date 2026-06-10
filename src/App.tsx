@@ -8,6 +8,7 @@ import { useInitialLocationWeather } from './hooks/use-initial-location-weather'
 import { useWeather } from './hooks/use-weather';
 import { type FavoriteCity, readFavoriteCities, writeFavoriteCities } from './services/storage';
 import { getFavoriteCityByName, getFavoriteCityKey } from './utils/city';
+import { getWeatherTheme } from './utils/weather-theme';
 
 function App() {
   const [favoriteCities, setFavoriteCities] = useState<FavoriteCity[]>(readFavoriteCities);
@@ -97,7 +98,10 @@ function App() {
   };
 
   return (
-    <main className="min-h-screen overflow-hidden px-4 py-6 text-slate-950 motion-safe:transition-colors motion-safe:duration-500 sm:px-6 lg:px-8">
+    <main
+      className="app-shell min-h-screen overflow-hidden px-4 py-6 text-slate-950 sm:px-6 lg:px-8"
+      data-weather-theme={getWeatherTheme(weather)}
+    >
       <section className="mx-auto flex min-h-[calc(100vh-3rem)] w-full max-w-7xl flex-col justify-center gap-7">
         <div className="content-rise relative z-20 grid items-center gap-5 lg:grid-cols-[520px_minmax(0,1fr)]">
           <h1 className="flex items-center gap-3 text-4xl font-bold text-balance sm:gap-4 sm:text-6xl">

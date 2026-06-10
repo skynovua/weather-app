@@ -52,7 +52,7 @@ export const SearchForm: FC<SearchFormProps> = (props) => {
       : 'border-slate-200 focus:border-sky-500 focus:ring-4 focus:ring-sky-100',
   );
   const errorClassName = cn(
-    'absolute top-full left-0 mt-1 text-sm text-red-600 transition-opacity duration-150',
+    'md:absolute top-full left-0 mt-1 text-sm text-red-600 transition-opacity duration-150',
     searchInlineError ? 'error-reveal opacity-100' : 'pointer-events-none opacity-0',
   );
 
