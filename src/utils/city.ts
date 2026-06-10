@@ -2,6 +2,10 @@ import { MIN_CITY_SEARCH_LENGTH } from '../constants/weather';
 import type { FavoriteCity } from '../services/storage';
 
 export function countryToFlag(countryCode: string) {
+  if (countryCode.toUpperCase() === 'RU') {
+    return '💩';
+  }
+
   return countryCode
     .toUpperCase()
     .split('')
