@@ -1,4 +1,4 @@
-import type { CSSProperties, FC } from 'react';
+import type { CSSProperties, FC, PointerEvent } from 'react';
 
 import type { GeoLocation } from '../types/weather';
 import { countryToFlag } from '../utils/city';
@@ -15,6 +15,14 @@ interface SearchSuggestionsDropdownProps {
 
 export const SearchSuggestionsDropdown: FC<SearchSuggestionsDropdownProps> = (props) => {
   const { error, loading, shouldShowEmpty, suggestions, onSelectCity } = props;
+
+  const handleSuggestionPointerDown = (
+    event: PointerEvent<HTMLButtonElement>,
+    cityName: string,
+  ) => {
+    event.preventDefault();
+    onSelectCity(cityName);
+  };
 
   return (
     <ul className="dropdown-reveal absolute top-[calc(100%-1rem)] right-0 left-0 z-50 overflow-hidden rounded-lg border border-slate-200 bg-white shadow-2xl shadow-slate-950/15">
@@ -40,6 +48,7 @@ export const SearchSuggestionsDropdown: FC<SearchSuggestionsDropdownProps> = (pr
           >
             <button
               type="button"
+              onPointerDown={(event) => handleSuggestionPointerDown(event, item.name)}
               onClick={() => onSelectCity(item.name)}
               className="grid w-full gap-1 px-4 py-3 text-left transition-colors duration-150 hover:bg-sky-50 focus:bg-sky-50 focus:outline-none"
             >
