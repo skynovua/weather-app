@@ -38,10 +38,9 @@ export const ConfirmDeleteButton: FC<ConfirmDeleteButtonProps> = (props) => {
             <button
               type="button"
               value="cancel"
-              autoFocus
               command="close"
               commandfor={id}
-              className="inline-flex h-11 items-center justify-center rounded-md border border-slate-200 bg-white px-4 text-sm text-slate-700 transition-colors hover:bg-slate-50 focus:bg-slate-50 focus:outline-none"
+              className="inline-flex h-11 items-center justify-center rounded-md border border-slate-200 bg-white px-4 text-sm text-slate-700 transition-colors hover:border-sky-200 hover:bg-sky-50 hover:text-sky-700 focus:border-sky-200 focus:bg-sky-50 focus:text-sky-700 focus:outline-none"
             >
               Скасувати
             </button>
@@ -49,7 +48,7 @@ export const ConfirmDeleteButton: FC<ConfirmDeleteButtonProps> = (props) => {
               type="submit"
               value="delete"
               onClick={onConfirm}
-              className="inline-flex h-11 items-center justify-center rounded-md bg-red-600 px-4 text-sm text-white transition-colors hover:bg-red-700 focus:bg-red-700 focus:outline-none"
+              className="inline-flex h-11 items-center justify-center rounded-md bg-slate-950 px-4 text-sm text-white shadow-lg shadow-slate-950/20 transition-colors hover:bg-slate-700 focus:bg-slate-700 focus:outline-none"
             >
               Видалити
             </button>

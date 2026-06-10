@@ -20,9 +20,9 @@ export const FavoriteCitiesList: FC<FavoriteCitiesListProps> = (props) => {
   }
 
   return (
-    <section className="max-w-2xl space-y-3">
+    <section className="content-rise space-y-3">
       <h2 className="text-sm text-slate-500 uppercase">Обрані міста</h2>
-      <div className="grid gap-2 sm:grid-cols-2">
+      <div className="flex gap-2 overflow-x-auto pb-1 sm:flex-wrap sm:overflow-visible sm:pb-0">
         {favoriteCities.map((favoriteCity) => {
           const favoriteCityKey = getFavoriteCityKey(favoriteCity);
           const isSelected = favoriteCityKey === selectedCityKey;
@@ -31,8 +31,8 @@ export const FavoriteCitiesList: FC<FavoriteCitiesListProps> = (props) => {
             <article
               key={favoriteCityKey}
               className={cn(
-                'grid grid-cols-[minmax(0,1fr)_2.5rem] items-center gap-2 rounded-md border bg-white/80 p-2 transition-colors',
-                isSelected ? 'border border-sky-500 ring-4 ring-sky-100' : 'border-slate-200',
+                'grid w-52 shrink-0 grid-cols-[minmax(0,1fr)_2.25rem] items-center gap-2 rounded-md border bg-white/80 p-2 transition-[border-color,box-shadow,transform] duration-200 focus-within:shadow-lg focus-within:shadow-slate-950/10 hover:shadow-lg hover:shadow-slate-950/10 sm:w-56',
+                isSelected ? 'border-sky-400 shadow-lg shadow-sky-950/10' : 'border-slate-200',
               )}
             >
               <button
@@ -51,7 +51,7 @@ export const FavoriteCitiesList: FC<FavoriteCitiesListProps> = (props) => {
                 id={favoriteCityKey}
                 favoriteCity={favoriteCity}
                 onConfirm={() => onRemoveCity(favoriteCity)}
-                className="grid h-10 w-10 place-items-center rounded-md border border-slate-200 text-lg leading-none text-slate-500 transition-colors hover:border-red-200 hover:bg-red-50 hover:text-red-600 focus:border-red-200 focus:bg-red-50 focus:text-red-600 focus:outline-none"
+                className="grid h-9 w-9 place-items-center rounded-md border border-slate-200 text-lg leading-none text-slate-500 transition-colors hover:border-red-200 hover:bg-red-50 hover:text-red-600 focus:border-red-200 focus:bg-red-50 focus:text-red-600 focus:outline-none"
               >
                 ×
               </ConfirmDeleteButton>

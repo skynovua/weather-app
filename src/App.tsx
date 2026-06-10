@@ -3,10 +3,12 @@ import { useEffect, useState } from 'react';
 import { FavoriteCitiesList } from './components/favorite-cities-list';
 import { SearchForm } from './components/search-form';
 import { WeatherCard } from './components/weather-card';
+import { WeatherLogoIcon } from './components/weather-logo-icon';
 import { useInitialLocationWeather } from './hooks/use-initial-location-weather';
 import { useWeather } from './hooks/use-weather';
 import { type FavoriteCity, readFavoriteCities, writeFavoriteCities } from './services/storage';
 import { getFavoriteCityByName, getFavoriteCityKey } from './utils/city';
+import { getWeatherTheme } from './utils/weather-theme';
 
 function App() {
   const [favoriteCities, setFavoriteCities] = useState<FavoriteCity[]>(readFavoriteCities);
@@ -96,38 +98,34 @@ function App() {
   };
 
   return (
-    <main className="min-h-screen overflow-hidden px-4 py-6 text-slate-950 motion-safe:transition-colors motion-safe:duration-500 sm:px-6 lg:px-8">
-      <section className="mx-auto grid min-h-[calc(100vh-3rem)] w-full max-w-6xl items-center gap-8 lg:grid-cols-[minmax(0,1fr)_420px]">
-        <div className="content-rise relative z-20 space-y-8">
-          <div className="max-w-2xl space-y-5">
-            <h1 className="text-4xl font-bold text-balance sm:text-6xl">Weather App</h1>
-            <p className="max-w-xl text-base leading-7 text-slate-700 sm:text-lg">
-              by Anton Yanovskyi{' '}
-              <a
-                href="https://github.com/skynovua"
-                className="font-medium text-sky-600 hover:underline"
-                target="_blank"
-              >
-                @skynov
-              </a>
-            </p>
+    <main
+      className="app-shell min-h-screen overflow-hidden px-4 py-6 text-slate-950 sm:px-6 lg:px-8"
+      data-weather-theme={getWeatherTheme(weather)}
+    >
+      <section className="mx-auto flex min-h-[calc(100vh-3rem)] w-full max-w-7xl flex-col justify-center gap-7">
+        <div className="content-rise relative z-20 grid items-center gap-5 lg:grid-cols-[520px_minmax(0,1fr)]">
+          <h1 className="flex items-center gap-3 text-4xl font-bold text-balance sm:gap-4 sm:text-6xl">
+            <WeatherLogoIcon className="h-12 w-12 shrink-0 drop-shadow-sm sm:h-16 sm:w-16" />
+            <span className="tracking-tighter">Weather App</span>
+          </h1>
+
+          <div className="max-w-4xl">
+            <SearchForm
+              loading={loading}
+              onClearWeatherError={clearWeatherError}
+              onSearchCity={handleCitySearch}
+              weatherError={weatherError}
+              weatherErrorVersion={weatherErrorVersion}
+            />
           </div>
-
-          <SearchForm
-            loading={loading}
-            onClearWeatherError={clearWeatherError}
-            onSearchCity={handleCitySearch}
-            weatherError={weatherError}
-            weatherErrorVersion={weatherErrorVersion}
-          />
-
-          <FavoriteCitiesList
-            favoriteCities={favoriteCities}
-            selectedCityKey={currentWeatherFavoriteKey}
-            onOpenCity={handleFavoriteCityOpen}
-            onRemoveCity={handleFavoriteCityRemove}
-          />
         </div>
+
+        <FavoriteCitiesList
+          favoriteCities={favoriteCities}
+          selectedCityKey={currentWeatherFavoriteKey}
+          onOpenCity={handleFavoriteCityOpen}
+          onRemoveCity={handleFavoriteCityRemove}
+        />
 
         <WeatherCard
           favoriteCity={currentFavoriteCity}

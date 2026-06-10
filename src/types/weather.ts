@@ -59,6 +59,7 @@ export interface WeatherCoordinates {
 
 export interface CityWeatherInfo {
   city: string;
+  condition: string;
   country: string;
   temperature: number;
   feelsLike: number;
