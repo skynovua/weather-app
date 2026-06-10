@@ -25,6 +25,7 @@ function App() {
     removeCachedWeather,
   } = useWeather();
   const { markManualWeatherRequest } = useInitialLocationWeather({
+    loadCityWeather,
     loadCoordinatesWeather,
   });
   const currentWeatherFavoriteKey = weather
@@ -131,6 +132,7 @@ function App() {
           favoriteCity={currentFavoriteCity}
           forecast={forecast}
           isFavorite={isCurrentCityFavorite}
+          loading={loading}
           onAddFavorite={handleFavoriteCityAdd}
           onRemoveFavorite={handleFavoriteCityRemove}
           weather={weather}

@@ -46,7 +46,7 @@ export const SearchForm: FC<SearchFormProps> = (props) => {
     suggestions.length === 0;
   const shouldDisableSubmit = loading || (hasSearchedSuggestions && suggestions.length === 0);
   const inputClassName = cn(
-    'h-12 w-full rounded-md border bg-white px-4 pr-12 text-base text-slate-950 outline-none transition-[border-color,box-shadow] duration-200',
+    'h-12 w-full appearance-none rounded-md border bg-white px-4 py-3 pr-12 text-base leading-6 text-slate-950 outline-none transition-[border-color,box-shadow] duration-200',
     searchInlineError
       ? 'border-red-600 focus:border-red-600 focus:ring-0'
       : 'border-slate-200 focus:border-sky-500 focus:ring-4 focus:ring-sky-100',
@@ -123,16 +123,11 @@ export const SearchForm: FC<SearchFormProps> = (props) => {
           onChange={handleCityChange}
           onFocus={() => setIsSuggestionsOpen(canSearch)}
           placeholder="Наприклад, Харків"
-          aria-invalid={Boolean(searchInlineError)}
-          aria-describedby="search-error"
           className={inputClassName}
           autoComplete="off"
         />
         {searchInlineError && (
-          <span
-            aria-hidden="true"
-            className="pointer-events-none absolute top-6 right-4 grid h-5 w-5 -translate-y-1/2 place-items-center rounded-full border-2 border-red-600 text-xs leading-none font-bold text-red-600"
-          >
+          <span className="pointer-events-none absolute top-6 right-4 grid h-5 w-5 -translate-y-1/2 place-items-center rounded-full border-2 border-red-600 text-xs leading-none font-bold text-red-600">
             !
           </span>
         )}
@@ -147,7 +142,7 @@ export const SearchForm: FC<SearchFormProps> = (props) => {
           />
         )}
 
-        <p id="search-error" className={errorClassName} aria-live="polite">
+        <p id="search-error" className={errorClassName}>
           {searchInlineError || ' '}
         </p>
       </div>

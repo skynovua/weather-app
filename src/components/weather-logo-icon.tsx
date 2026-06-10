@@ -2,7 +2,7 @@ import type { SVGProps } from 'react';
 
 export const WeatherLogoIcon: React.FC<SVGProps<SVGSVGElement>> = (props) => {
   return (
-    <svg viewBox="0 0 32 32" aria-hidden="true" focusable="false" {...props}>
+    <svg viewBox="0 0 32 32" {...props}>
       <circle cx="18" cy="17" r="6" className="fill-amber-400" />
       <path
         className="fill-amber-400"

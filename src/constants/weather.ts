@@ -1,4 +1,5 @@
 export const MIN_CITY_SEARCH_LENGTH = 2;
+export const DEFAULT_CITY = 'Kyiv';
 
 export const CITY_SUGGESTIONS_DEBOUNCE_MS = 300;
 export const CITY_SUGGESTIONS_LIMIT = 5;

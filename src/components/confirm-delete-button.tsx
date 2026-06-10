@@ -1,4 +1,4 @@
-import { type FC, type ReactNode } from 'react';
+import { type FC, type ReactNode, useRef } from 'react';
 
 import type { FavoriteCity } from '../services/storage';
 import { countryToFlag } from '../utils/city';
@@ -13,16 +13,31 @@ interface ConfirmDeleteButtonProps {
 
 export const ConfirmDeleteButton: FC<ConfirmDeleteButtonProps> = (props) => {
   const { id, children, className, favoriteCity, onConfirm } = props;
+  const dialogRef = useRef<HTMLDialogElement>(null);
+
+  const handleDialogOpen = () => {
+    const dialog = dialogRef.current;
+
+    if (!dialog) {
+      return;
+    }
+
+    dialog.showModal();
+    dialog.focus();
+  };
+
   return (
     <>
-      <button type="button" command="show-modal" commandfor={id} className={className}>
+      <button type="button" onClick={handleDialogOpen} className={className}>
         {children}
       </button>
 
       <dialog
+        ref={dialogRef}
         className="confirm-dialog w-[min(92vw,420px)] rounded-lg border border-slate-200 bg-white p-0 text-slate-950 shadow-2xl shadow-slate-950/20 backdrop:bg-slate-950/35"
         closedby="any"
         id={id}
+        tabIndex={-1}
       >
         <div className="space-y-5 p-5">
           <div className="space-y-2">
