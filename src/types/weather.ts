@@ -72,6 +72,8 @@ export interface CityWeatherInfo {
 export interface ForecastItem {
   dt: number;
   temperature: number;
+  tempMin: number;
+  tempMax: number;
   feelsLike: number;
   humidity: number;
   windSpeed: number;
@@ -83,11 +85,14 @@ export interface ForecastApiResponse {
   city: {
     name: string;
     country: string;
+    timezone: number;
   };
   list: Array<{
     dt: number;
     main: {
       temp: number;
+      temp_min: number;
+      temp_max: number;
       feels_like: number;
       humidity: number;
     };

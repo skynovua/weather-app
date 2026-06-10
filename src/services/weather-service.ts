@@ -24,30 +24,45 @@ function mapCurrentWeather(data: WeatherApiResponse): CityWeatherInfo {
 }
 
 function mapForecastWeather(data: ForecastApiResponse): ForecastWeatherInfo {
-  const groupedByDay = new Map<string, ForecastApiResponse['list'][number]>();
+  const groupedByDay = new Map<string, ForecastApiResponse['list']>();
 
   data.list.forEach((item) => {
-    const dayKey = new Date(item.dt * 1000).toISOString().slice(0, 10);
+    const dayKey = new Date((item.dt + data.city.timezone) * 1000).toISOString().slice(0, 10);
+    const dayItems = groupedByDay.get(dayKey);
 
-    if (!groupedByDay.has(dayKey)) {
-      groupedByDay.set(dayKey, item);
+    if (dayItems) {
+      dayItems.push(item);
+    } else {
+      groupedByDay.set(dayKey, [item]);
     }
   });
 
-  const list = Array.from(groupedByDay.values()).map((item) => ({
-    dt: item.dt,
-    temperature: Math.round(item.main.temp),
-    feelsLike: Math.round(item.main.feels_like),
-    humidity: item.main.humidity,
-    windSpeed: Math.round(item.wind.speed),
-    description: item.weather[0]?.description ?? 'Відсутній опис погоди',
-    icon: item.weather[0]?.icon ?? '01d',
-  }));
+  const list = Array.from(groupedByDay.values()).map((dayItems) => {
+    const representativeItem = dayItems.reduce((closestItem, item) => {
+      const closestHour = new Date((closestItem.dt + data.city.timezone) * 1000).getUTCHours();
+      const itemHour = new Date((item.dt + data.city.timezone) * 1000).getUTCHours();
+
+      return Math.abs(itemHour - 12) < Math.abs(closestHour - 12) ? item : closestItem;
+    });
+
+    return {
+      dt: representativeItem.dt,
+      temperature: Math.round(representativeItem.main.temp),
+      tempMin: Math.round(Math.min(...dayItems.map((item) => item.main.temp_min))),
+      tempMax: Math.round(Math.max(...dayItems.map((item) => item.main.temp_max))),
+      feelsLike: Math.round(representativeItem.main.feels_like),
+      humidity: representativeItem.main.humidity,
+      windSpeed: Math.round(representativeItem.wind.speed),
+      description: representativeItem.weather[0]?.description ?? 'Відсутній опис погоди',
+      icon: representativeItem.weather[0]?.icon ?? '01d',
+    };
+  });
 
   return {
     city: {
       name: data.city.name,
       country: data.city.country,
+      timezone: data.city.timezone,
     },
     list,
   };

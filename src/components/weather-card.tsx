@@ -193,6 +193,11 @@ export const WeatherCard: React.FC<WeatherCardProps> = (props) => {
                   </div>
                   <div className="self-end">
                     <p className="text-3xl font-semibold">{day.temperature}°</p>
+                    {day.tempMin !== undefined && day.tempMax !== undefined && (
+                      <p className="mt-1 text-xs font-medium text-slate-600">
+                        {day.tempMin}° / {day.tempMax}°
+                      </p>
+                    )}
                     <p className="mt-1 text-xs text-slate-500">вітер {day.windSpeed} км/год</p>
                   </div>
                 </article>
