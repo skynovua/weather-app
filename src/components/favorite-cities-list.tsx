@@ -21,7 +21,7 @@ export const FavoriteCitiesList: FC<FavoriteCitiesListProps> = (props) => {
 
   return (
     <section className="max-w-2xl space-y-3">
-      <h2 className="text-sm uppercase text-slate-500">Обрані міста</h2>
+      <h2 className="text-sm text-slate-500 uppercase">Обрані міста</h2>
       <div className="grid gap-2 sm:grid-cols-2">
         {favoriteCities.map((favoriteCity) => {
           const favoriteCityKey = getFavoriteCityKey(favoriteCity);

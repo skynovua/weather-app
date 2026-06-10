@@ -26,7 +26,7 @@ export const ConfirmDeleteButton: FC<ConfirmDeleteButtonProps> = (props) => {
       >
         <div className="space-y-5 p-5">
           <div className="space-y-2">
-            <p className="text-sm uppercase text-slate-500">Обране місто</p>
+            <p className="text-sm text-slate-500 uppercase">Обране місто</p>
             <h2 className="text-2xl font-semibold">Видалити {favoriteCity.city}?</h2>
             <p className="text-sm leading-6 text-slate-600">
               {countryToFlag(favoriteCity.country)} {favoriteCity.city}, {favoriteCity.country} буде
