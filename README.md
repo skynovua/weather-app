@@ -1,75 +1,48 @@
-# React + TypeScript + Vite
+# Weather App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React + TypeScript застосунок для перегляду поточної погоди, прогнозу та збереження обраних міст.
 
-Currently, two official plugins are available:
+![Weather App preview](public/preview.png)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Demo
 
-## React Compiler
+https://weather-app-xi-swart-70.vercel.app/
 
-The React Compiler is enabled on this template. See [this documentation](https://react.dev/learn/react-compiler) for more information.
+## Автор
 
-Note: This will impact Vite dev & build performances.
+[![GitHub](https://img.shields.io/badge/GitHub-@skynovua-181717?style=for-the-badge&logo=github)](https://github.com/skynovua)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-skynov-0A66C2?style=for-the-badge&logo=linkedin)](https://www.linkedin.com/in/skynov/)
 
-## Expanding the ESLint configuration
+## Встановлення
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+```bash
+pnpm install
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## Налаштування
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x';
-import reactDom from 'eslint-plugin-react-dom';
+Створи `.env` у корені проєкту та додай ключ OpenWeather:
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-]);
+```bash
+VITE_OPENWEATHER_API_KEY=your_api_key_here
+```
+
+Ключ можна отримати в OpenWeather API.
+
+## Запуск
+
+```bash
+pnpm dev
+```
+
+Після запуску відкрий URL, який покаже Vite у терміналі.
+
+## Команди
+
+```bash
+pnpm dev      # локальний dev server
+pnpm build    # production build
+pnpm lint     # перевірка ESLint
+pnpm format   # форматування Prettier
+pnpm preview  # перегляд production build
 ```
