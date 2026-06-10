@@ -1,0 +1,240 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans:
+    Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --app-bg-start: #f8fafc;
+  --app-bg-end: #e2e8f0;
+  --surface-muted: #e2e8f0;
+  --surface-subtle: #f8fafc;
+  --overlay-backdrop: rgb(15 23 42 / 0.38);
+  --overlay-backdrop-blur: 3px;
+  --motion-ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --motion-ease-shake: cubic-bezier(0.36, 0.07, 0.19, 0.97);
+  --motion-content-rise-duration: 500ms;
+  --motion-dropdown-duration: 200ms;
+  --motion-dropdown-item-duration: 200ms;
+  --motion-dropdown-item-delay-step: 40ms;
+  --motion-weather-card-duration: 250ms;
+  --motion-error-duration: 250ms;
+  --motion-input-shake-duration: 350ms;
+  --motion-skeleton-duration: 1.2s;
+  --modal-open-dur: 250ms;
+  --modal-scale: 0.9;
+  --modal-ease: var(--motion-ease-out);
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    margin: 0;
+    font-family: var(--font-sans);
+    background: linear-gradient(180deg, var(--app-bg-start) 0%, var(--app-bg-end) 100%);
+  }
+
+  button,
+  input {
+    font: inherit;
+  }
+
+  button {
+    cursor: pointer;
+  }
+}
+
+@layer components {
+  .dropdown-reveal {
+    animation: dropdown-reveal var(--motion-dropdown-duration) var(--motion-ease-out) both;
+    transform-origin: top center;
+  }
+
+  .dropdown-item {
+    --item-index: 0;
+    animation: dropdown-item var(--motion-dropdown-item-duration) var(--motion-ease-out) both;
+    animation-delay: calc(var(--item-index) * var(--motion-dropdown-item-delay-step));
+  }
+
+  .skeleton-line {
+    background: linear-gradient(
+      90deg,
+      var(--surface-muted) 0%,
+      var(--surface-subtle) 45%,
+      var(--surface-muted) 90%
+    );
+    background-size: 220% 100%;
+    animation: skeleton-shimmer var(--motion-skeleton-duration) ease-in-out infinite;
+  }
+
+  .weather-card {
+    transition:
+      transform var(--motion-weather-card-duration) var(--motion-ease-out),
+      box-shadow var(--motion-weather-card-duration) var(--motion-ease-out);
+  }
+
+  .error-reveal {
+    animation: error-reveal var(--motion-error-duration) var(--motion-ease-out) both;
+  }
+
+  .input-error-shake {
+    animation: input-error-shake var(--motion-input-shake-duration) var(--motion-ease-shake) both;
+  }
+
+  .confirm-dialog {
+    position: fixed;
+    inset: 0;
+    max-height: calc(100dvh - 2rem);
+    margin: auto;
+    transform-origin: center;
+  }
+
+  .confirm-dialog::backdrop {
+    background: var(--overlay-backdrop);
+    backdrop-filter: blur(var(--overlay-backdrop-blur));
+  }
+
+  .confirm-dialog {
+    transform: scale(var(--modal-scale));
+    opacity: 0;
+    will-change: transform, opacity;
+  }
+
+  .confirm-dialog:open {
+    transform: scale(1);
+    opacity: 1;
+    transition:
+      transform var(--modal-open-dur) var(--modal-ease),
+      opacity var(--modal-open-dur) var(--modal-ease);
+  }
+
+  @starting-style {
+    .confirm-dialog:open {
+      transform: scale(var(--modal-scale)) translateY(20px);
+      opacity: 0;
+    }
+  }
+
+  .confirm-dialog::backdrop {
+    background: transparent;
+  }
+
+  .confirm-dialog:open::backdrop {
+    background: var(--overlay-backdrop);
+    transition: background var(--modal-open-dur) var(--modal-ease);
+  }
+
+  @starting-style {
+    .confirm-dialog:open::backdrop {
+      background: transparent;
+    }
+  }
+}
+
+@keyframes content-rise {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes dropdown-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(-6px) scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes dropdown-item {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes skeleton-shimmer {
+  from {
+    background-position: 120% 0;
+  }
+
+  to {
+    background-position: -120% 0;
+  }
+}
+
+@keyframes error-reveal {
+  0% {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+
+  60% {
+    transform: translateY(1px);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes input-error-shake {
+  0%,
+  100% {
+    transform: translateX(0);
+  }
+
+  14% {
+    transform: translateX(-6px);
+  }
+
+  28% {
+    transform: translateX(6px);
+  }
+
+  42% {
+    transform: translateX(-4px);
+  }
+
+  56% {
+    transform: translateX(4px);
+  }
+
+  70% {
+    transform: translateX(-2px);
+  }
+
+  84% {
+    transform: translateX(2px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dropdown-reveal,
+  .dropdown-item,
+  .skeleton-line,
+  .error-reveal,
+  .input-error-shake,
+  .confirm-dialog,
+  .weather-card,
+  [class*='animate-'] {
+    animation: none !important;
+    transition: none !important;
+  }
+}

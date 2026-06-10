@@ -1,0 +1,11 @@
+export const MIN_CITY_SEARCH_LENGTH = 2;
+
+export const CITY_SUGGESTIONS_DEBOUNCE_MS = 300;
+export const CITY_SUGGESTIONS_LIMIT = 5;
+
+export const ERROR_MESSAGE_TIMEOUT_MS = 3000;
+
+export const FORECAST_API_ITEM_LIMIT = 40;
+export const FORECAST_DAYS_LIMIT = 5;
+
+export const WEATHER_CACHE_TTL_MS = 60 * 60 * 1000;
