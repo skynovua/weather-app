@@ -8,7 +8,7 @@ import { ConfirmDeleteButton } from './confirm-delete-button';
 const weatherStats = [
   { key: 'feelsLike', label: 'Відчувається як', unit: '°C' },
   { key: 'humidity', label: 'Вологість', unit: '%' },
-  { key: 'windSpeed', label: 'Вітер', unit: ' км/год' },
+  { key: 'windSpeed', label: 'Вітер', unit: ' м/с' },
 ] as const;
 
 const forecastDateFormatter = new Intl.DateTimeFormat('uk-UA', {
